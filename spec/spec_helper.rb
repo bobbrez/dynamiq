@@ -3,6 +3,7 @@ $:.unshift File.expand_path('../../lib', __FILE__)
 
 require 'pry'
 require 'pry-byebug'
+require 'timecop'
 
 Dir[File.join './spec/support/**/*.rb'].each { |f| require f }
 
