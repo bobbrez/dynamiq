@@ -1,13 +1,11 @@
 require 'sidekiq'
-require 'sidekiq/api'
-
-require 'dynamiq/sidekiq/api'
 
 require 'dynamiq/version'
 require 'dynamiq/worker'
 require 'dynamiq/client'
 require 'dynamiq/job'
 require 'dynamiq/fetcher'
+require 'dynamiq/queue'
 
 module Dynamiq
   QUEUE_LIST = 'queues'

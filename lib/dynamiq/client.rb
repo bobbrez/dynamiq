@@ -1,6 +1,12 @@
 module Dynamiq
   class Client < Sidekiq::Client
-    private
+    def push_message(message)
+      redis_pool.with do |conn|
+        atomic_push conn, [ JSON.parse(message) ]
+      end
+    end
+
+  private
 
     def atomic_push(conn, payloads)
       if payloads.first['at']
@@ -15,9 +21,9 @@ module Dynamiq
           [ entry.delete('score').to_i, Sidekiq.dump_json(entry) ]
         end
 
-        conn.sadd Dynamiq::DYNAMIC_QUEUE_LIST, q
-        conn.sadd Dynamiq::QUEUE_LIST, q
-        conn.zadd [Dynamiq::DYNAMIC_QUEUE_LIST, q].join(':'), to_push
+        conn.sadd :queues, q
+        conn.sadd :dynamic_queues, q
+        conn.zadd [:dynamic_queue, q].join(':'), to_push
       end
     end
   end

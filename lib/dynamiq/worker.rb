@@ -1,9 +1,15 @@
 module Dynamiq
   module Worker
+    attr_accessor :jid
+
     def self.included(base)
       base.class.include Sidekiq::Worker
       base.extend Sidekiq::Worker::ClassMethods
       base.extend ClassMethods
+
+      base.class_attribute :sidekiq_options_hash
+      base.class_attribute :sidekiq_retry_in_block
+      base.class_attribute :sidekiq_retries_exhausted_block
     end
 
     module ClassMethods
