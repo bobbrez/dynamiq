@@ -10,6 +10,7 @@ require 'byebug'
 
 task :monitor do
   require './lib/dynamiq'
+
   require 'sinatra'
   require './lib/dynamiq/web'
   app = Dynamiq::Web
