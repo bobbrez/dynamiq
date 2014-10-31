@@ -18,6 +18,10 @@ module Dynamiq
       @dynamic ||= Sidekiq.redis { |redis| redis.sismember :dynamic_queues, name }
     end
 
+    def paused?
+      false
+    end
+
     def requeue(message)
       if dynamic?
         Dynamiq::Client.new.push_message message
@@ -59,12 +63,12 @@ module Dynamiq
     end
     
     def clear
-      return super unless dynamic?
+      index_list = dynamic? ? :dynamic_queues : :queues
 
       Sidekiq.redis do |redis|
         redis.multi do
-          redis.del @rname
-          redis.srem :dynamic_queue, name
+          redis.del path
+          redis.srem index_list, name
         end
       end
     end
@@ -72,9 +76,9 @@ module Dynamiq
 
     def size
       if dynamic?
-        Sidekiq.redis { |con| con.llen(@rname) }
+        Sidekiq.redis { |redis| redis.zcount path, '-inf', '+inf' }
       else
-        Sidekiq.redis { |redis| redis.zcount @rname, '-inf', '+inf' }
+        Sidekiq.redis { |redis| redis.llen path }
       end
     end
 
