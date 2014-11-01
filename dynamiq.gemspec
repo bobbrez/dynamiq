@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'A dynamic priority queue extension for Sidekiq'
   spec.description   = spec.summary
   spec.homepage      = 'https://github.com/bobbrez/dynamiq'
-  spec.license       = 'MIT'
+  spec.license       = 'LGPL-3.0'
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
